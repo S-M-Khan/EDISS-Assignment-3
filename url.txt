@@ -1,0 +1,4 @@
+http://a441fa6e3306348c6a69ce4eed02c543-a342efdf068be268.elb.us-east-1.amazonaws.com:80
+http://a873b34057a4740929e236db0c6991f4-fcfd114f22417288.elb.us-east-1.amazonaws.com:80
+seringmk
+momodouseringkhan95@gmail.com
