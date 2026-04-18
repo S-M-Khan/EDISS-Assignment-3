@@ -1,0 +1,76 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-service
+  namespace: bookstore-ns
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: book-service
+  template:
+    metadata:
+      labels:
+        app: book-service
+    spec:
+      containers:
+      - name: book-service
+        image: serign/book-service:v16
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000  
+        
+        env:
+        - name: DB_NAME
+          value: "bookdb"     
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: host
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-keys-secret
+              key: gemini-key
+
+        - name: RECOMMENDATION_SERVICE_URL
+          value: "http://100.51.187.149"
+        
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        
+      #   volumeMounts:
+      #   - name: circuit-storage
+      #     mountPath: /circuit-state.json
+      #     subPath: state.json
+      # volumes:
+      # - name: circuit-storage
+      #   emptyDir: {}  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+  namespace: bookstore-ns
+spec:
+  selector:
+    app: book-service
+  ports:
+  - port: 3000
+    targetPort: 3000

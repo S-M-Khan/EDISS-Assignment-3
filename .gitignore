@@ -8,8 +8,4 @@ node_modules/
 # AWS key
 labsuser3.pem
 
-# Ignore all k8s folders inside src services
-src/*/k8s/
-
-# Ignore root k8s folder
-k8s/
+docker-compose.yml
