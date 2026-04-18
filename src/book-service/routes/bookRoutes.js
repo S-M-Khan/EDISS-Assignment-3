@@ -342,7 +342,7 @@ router.get(["/:ISBN", "/isbn/:ISBN"], async (req, res) => {
     if (!book) return res.status(404).send();
 
     // wait for the LLM to finish
-    let attempts = 40;
+    let attempts = 60;
     while (!book.summary && attempts > 0) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       book = await getBookByISBN(isbn);
@@ -417,7 +417,7 @@ router.post("/", async (req, res) => {
       });
 
     // make call to LLM to generate and save book summary
-    generateAndSaveSummary(bookData.ISBN, bookData.title, bookData.Author);
+    await generateAndSaveSummary(bookData.ISBN, bookData.title, bookData.Author);
   } catch (error) {
     console.log("error message from add book POST route: ", error);
     return res.status(500).send(error.message);
