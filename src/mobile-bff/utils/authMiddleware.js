@@ -1,12 +1,7 @@
 const { validateJWT } = require("./validateJWT");
 
 const authMiddleware = (req, res, next) => {
-  // check client type
-  const clientType = req.get("X-Client-Type");
-  if (!clientType || !["ios", "android"].includes(clientType.toLowerCase())) {
-    return res.status(400).send();
-  }
-
+  
   // check authorization header
   const authHeader = req.get("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -19,7 +14,12 @@ const authMiddleware = (req, res, next) => {
   if (statusCode === 401) {
     return res.status(401).send();
   }
-
+  
+  // check client type
+  const clientType = req.get("X-Client-Type");
+  if (!clientType || !["ios", "android"].includes(clientType.toLowerCase())) {
+    return res.status(400).send();
+  }
   next();
 };
 
